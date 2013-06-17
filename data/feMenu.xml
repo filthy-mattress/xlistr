@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<root>
+	<python>
+		<method name="save">
+master=None
+def execute(event=None):
+	master.current_editor().save()
+		</method>
+		<method name="open">
+master=None
+def execute(event=None):
+	import tkFileDialog
+	fname=tkFileDialog.askopenfilename()
+	if fname!=None and fname!='':
+		if fname.endswith('.xml'):
+			master.addtabs_byname(fname)
+		elif fname.endswith('.py'):
+			master.add_tab_byname(fname)
+		</method>
+		<method name="quit">
+master=None
+def execute(event=None):
+	master.quit()
+		</method>
+		<method name="newfile">
+master=None
+def execute(event=None):
+	import tkFileDialog
+	fname=tkFileDialog.asksaveasfilename()
+	if fname!=None and fname!='':
+		master.newfile(fname)
+		</method>
+		<method name="copy">
+master=None
+def execute(event=None):
+	master.current_editor().copy()
+		</method>
+		<method name="cut">
+master=None
+def execute(event=None):
+	master.current_editor().cut()
+		</method>
+		<method name="paste">
+master=None
+def execute(event=None):
+	master.current_editor().paste()
+		</method>
+		<method name="toggle_view">
+master=None
+def execute(event=None):
+	master.toggle_view()
+		</method>
+		<method name="none">
+master=None
+def execute(event=None):
+	pass
+		</method>
+	</python>
+	<menus>
+		<menu label="File" parent="root">
+			<cmd label="New... Ctrl+N" command="newfile" bind="Control-n"/>
+			<cmd label="Save Ctrl+S" command="save" bind="Control-s"/>
+			<cmd label="Open Ctrl+O" command="open" bind="Control-o"/>
+			<sep parent="File"/>
+			<menu label="Test...">
+				<cmd label="Dummy" command="none"/>
+			</menu>
+			<cmd label="Close Editor Ctrl+Q" command="quit" parent="File" bind="Control-q"/>
+		</menu>
+		<menu label="Edit" parent="root">
+			<cmd label="Cut Ctrl+X" command="cut"/>
+			<cmd label="Copy Ctrl+C" command="copy"/>
+			<cmd label="Paste Ctrl+V" command="paste"/>
+		</menu>
+		<menu label="View" parent="root">
+			<cmd label="Toggle View Ctrl+T" command="toggle_view" bind="Control-t"/>
+		</menu>
+	</menus>
+</root>
