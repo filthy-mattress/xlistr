@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<root>
+	<python>
+		<method name="save">
+master=None
+def execute(event=None):
+	master.save()
+		</method>
+		<method name="open">
+master=None
+def execute(event=None):
+	master.openfile()
+		</method>
+		<method name="quit">
+master=None
+def execute(event=None):
+	master.quit()
+		</method>
+		<method name="filt_editor">
+master=None
+def execute(event=None):
+	master.newfilteditor()
+		</method>
+	</python>
+	<menus>
+		<menu label="File" parent="root">
+			<cmd label="Save Ctrl+S" command="save" bind="Control-s"/>
+			<cmd label="Open Ctrl+O" command="open" bind="Control-o"/>
+			<sep parent="File"/>
+			<cmd label="Quit Ctrl+Q" command="quit" bind="Control-q"/>
+		</menu>
+		<menu label="Edit" parent="root">
+			<cmd label="Filter Editor Ctrl+E" command="filt_editor" bind="Control-e"/>
+		</menu>
+	</menus>
+</root>
