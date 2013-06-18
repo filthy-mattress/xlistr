@@ -10,12 +10,12 @@
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 import os,sys
-print os.curdir
+#print os.curdir
 HOME=os.path.abspath(".")
 if not HOME.endswith('xlistr'):
     HOME+=os.sep+'xlistr'
 PARENT=os.path.split(HOME)[0]
-print "HOME=%s\nPARENT=%s" % (HOME,PARENT)
+#print "HOME=%s\nPARENT=%s" % (HOME,PARENT)
 pathset=set(sys.path)
 pathset.add(HOME)
 pathset.add(PARENT)
@@ -24,7 +24,7 @@ os.curdir=HOME
 #print sys.path
 from xmlreader import *
 import gui,tkFileDialog
-print gui.format(129.787667)
+#print gui.format(129.787667)
 VERSION="ALPHA 0.0.1"
 FNAME_ALL="playlists/all.xml"
 all_songs=None

@@ -37,9 +37,10 @@ def add_scroll(widget,orient):
 		scroll.config(command=widget.xview)
 	return scroll
 def add_yscroll(widget):
-	return add_scroll(widget,'vertical')
+	widget.yscroll= add_scroll(widget,'vertical')
+	return widget.yscroll
 def add_xscroll(widget):
-	return add_scroll(widget,'horizontal')
+	widget.xscroll= add_scroll(widget,'horizontal')
 def xmlMenu_by_filename(master,filename,frame):
 	return XMLMenu(master,read_file(filename),frame)
 def current_id(nb):
@@ -132,6 +133,7 @@ class App(Frame):
 		Frame.__init__(self, master,width=width,height=height)
 		self.pack()
 		self.master.title('Xlistr ver:'+xlistr.VERSION)
+		#add_yscroll(self.master)
 		self.menu=xmlMenu_by_filename(master,xlistr.HOME+'/data/appMenu.xml',self)
 		#Set up music library notebook
 		self.musicnb=Notebook(self)
@@ -142,8 +144,8 @@ class App(Frame):
 		self.albumframe=AlbumFrame(self.musicnb,xlistr.all_songs)
 		self.musicnb.add(self.songsframe,text="Songs",sticky='n',underline=0)
 		self.musicnb.add(self.albumframe,text="Albums",sticky='n',underline=0)
-		self.songsframe.pack()
-		self.albumframe.pack()
+		#self.songsframe.pack()
+		#self.albumframe.pack()
 		#Separator
 		Separator(self,orient='vertical').grid(row=0,column=1)
 		#Playlists notebook
@@ -166,6 +168,9 @@ class App(Frame):
 	def addsong(self,song):
 		xlistr.all_songs.add_song(song)
 		self.songsframe.addsong(song)
+	def addalbum(self,album):
+		xlistr.all_songs.add_album(album)
+		self.albumframe.add(album)
 	def newfilteditor(self,playlist=None):
 		thread_create(FilterEditor)
 class SortButton(Button):
@@ -175,11 +180,17 @@ class SortButton(Button):
 		self.index=index
 	def sort(self):
 		self.master.sort(self.index)
+def addsort(keys,item,index):
+	for i in range(len(keys)):
+		if item<keys[i][index]:
+			return i
+	return len(keys)
 class SongsFrame(Canvas):
 	def __init__(self,master,playlist):
 		Canvas.__init__(self,master)
 		self.playlist=playlist
 		self.lines={}
+		self.config(scrollregion=(0,0,1000,1000))
 		#add_yscroll(self)
 		self.masterbtn=BoolBox(self,False,command=self.checkall)
 		self.masterbtn.grid(row=0,column=0)
@@ -200,19 +211,28 @@ class SongsFrame(Canvas):
 		if song not in xlistr.all_songs.get_songs():
 			f=SongLine(self,song)
 			self.addframe(f)
+		self.config(scrollregion=self.bbox(ALL))
 	def addframe(self,frame):
 		frame.grid(row=len(self.lines)+1,column=0,columnspan=4)
 		self.lines[frame]=frame.tup
 	def sort(self,index):
-		temp={}
+		tups=[]
+		keys=set()
 		for frame in self.lines:
 			tup=self.lines[frame]()
-			temp[tup[index]]=frame
+			tups.append(tup)
+			keys.add(tup[index])
 		self.lines={}
-		for key in temp:
-			song=temp[key].song
-			temp[key].destroy()
-			self.addsong(song)
+		for k in keys:
+			hits=[]
+			for tup in tups:
+				if tup[index]==k:
+					song=tup[0].song
+					tup[0].destroy()
+					self.addsong(song)
+					hits.append(tup)
+			for h in hits:
+				tups.remove(h)
 class SongLine(Frame):
 	def __init__(self,master,song,selected=False):
 		Frame.__init__(self,master)
@@ -241,16 +261,16 @@ class SongLine(Frame):
 		else:
 			self.config(bg='white')
 	def get_title(self):
-		return self.title.get(0,END)
+		return self.title.get()
 	def get_artist(self):
-		return self.artist.get(0,END)
+		return self.artist.get()
 	def tup(self):
 		return (self,self.chk.val,self.get_title(),self.get_artist(),self.rating.get())
 	def update(self,event=None):
 		tup=self.tup()
 		self.song.set_title(tup[2])
 		self.song.set_artist(tup[3])
-		self.song.set_rating(tup[3])
+		self.song.set_rating(tup[4])
 class AlbumFrame(Frame):
 	def __init__(self,master,playlist=None,width=4):
 		Frame.__init__(self,master)
