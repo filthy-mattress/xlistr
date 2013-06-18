@@ -180,11 +180,12 @@ class SortButton(Button):
 		self.index=index
 	def sort(self):
 		self.master.sort(self.index)
-def addsort(keys,item,index):
+def addsort(keys,item):
 	for i in range(len(keys)):
-		if item<keys[i][index]:
-			return i
-	return len(keys)
+		if item<keys[i]:
+			keys.insert(i,item)
+			return
+	keys.append(item)
 class SongsFrame(Canvas):
 	def __init__(self,master,playlist):
 		Canvas.__init__(self,master)
@@ -217,11 +218,18 @@ class SongsFrame(Canvas):
 		self.lines[frame]=frame.tup
 	def sort(self,index):
 		tups=[]
-		keys=set()
+		keys=[]
 		for frame in self.lines:
 			tup=self.lines[frame]()
 			tups.append(tup)
-			keys.add(tup[index])
+			addsort(keys,tup[index])
+		if len(keys)==0:
+			return
+		try:
+			int(keys[0])
+			keys=set(keys)
+		except(ValueError):
+			pass
 		self.lines={}
 		for k in keys:
 			hits=[]
