@@ -55,6 +55,16 @@ master=None
 def execute(event=None):
 	pass
 		</method>
+		<method name="addto_plist">
+master=None
+def execute(event=None):
+	filt=master.current_editor().filt
+	if filt:
+		import tkFileDialog
+		from xmlreader import Playlist
+		plist=Playlist(tkFileDialog.askopenfilename())
+		plist.add_filter(filt)
+		</method>
 	</python>
 	<menus>
 		<menu label="File" parent="root">
@@ -62,6 +72,7 @@ def execute(event=None):
 			<cmd label="Save Ctrl+S" command="save" bind="Control-s"/>
 			<cmd label="Open Ctrl+O" command="open" bind="Control-o"/>
 			<sep parent="File"/>
+			<cmd label="Add to playlist" command="addto_plist" />
 			<menu label="Test...">
 				<cmd label="Dummy" command="none"/>
 			</menu>

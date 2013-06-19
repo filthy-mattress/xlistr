@@ -99,6 +99,7 @@ def new_filter(filename,enabled=True,gencode=True):
 	if gencode:
 		import gui
 		write_file(filename,gui.make_code())
+	filename=os.path.relpath(filename,xlistr.HOME)
 	elem=ET.Element(FILTER,{HREF:filename,ENABLED:str(enabled)})
 	return Filter(elem)
 def rel_to_abs(path,start):

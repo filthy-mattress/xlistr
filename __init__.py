@@ -68,10 +68,11 @@ def installAVbin():
 #Main section
 def main():
     #gui.thread_create(gui.FilterEditor)
-    #import xlistr.basictest as test
-    #test.main()
-    gui.create()
-    delTemps()
+    #import xlistr.test.playertester as test
+    #test.main(gui.FilterEditor)
+    #gui.create()
+    #delTemps()
+    gui.create(gui.FilterEditor)
 def delTemps():#Delete temp files
     path=os.path.join(HOME,"temp")
     for f in os.listdir(path):

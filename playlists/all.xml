@@ -31,14 +31,14 @@
             <albumtitle>LotR Part I: The Fellowship of the Ring</albumtitle>
             <index>3</index>
             <genre>Books &amp; Spoken</genre>
-        <duration>244.838667</duration><rating>5</rating></song>
+        <duration>244.838667</duration></song>
         <song href="LotR Part I The Fellowship of the Ring\01-- 0023 Of the Ordering of the Shire.mp3">
             <title>0.02.3 Of the Ordering of the Shire</title>
             <artist>J.R.R. Tolkien</artist>
             <albumtitle>LotR Part I: The Fellowship of the Ring</albumtitle>
             <index>4</index>
             <genre>Books &amp; Spoken</genre>
-        <duration>333.057</duration><rating>3</rating></song>
+        <duration>333.057</duration></song>
         <song href="LotR Part I The Fellowship of the Ring\01-- 0024 Of the Finding of the Ring.mp3">
             <title>0.02.4 Of the Finding of the Ring</title>
             <artist>J.R.R. Tolkien</artist>
@@ -66,7 +66,7 @@
             <albumtitle>LotR Part I: The Fellowship of the Ring</albumtitle>
             <index>8</index>
             <genre>Books &amp; Spoken</genre>
-        <duration>4115.381667</duration><rating>2</rating></song>
+        <duration>4115.381667</duration></song>
         <song href="LotR Part I The Fellowship of the Ring\01-- 103 Three is Company.mp3">
             <title>1.03 Three is Company</title>
             <artist>J.R.R. Tolkien</artist>
@@ -87,14 +87,14 @@
             <albumtitle>LotR Part I: The Fellowship of the Ring</albumtitle>
             <index>11</index>
             <genre>Books &amp; Spoken</genre>
-        <duration>1898.682667</duration><rating>2</rating></song>
+        <duration>1898.682667</duration></song>
         <song href="LotR Part I The Fellowship of the Ring\01-- 106 The Old Forest.mp3">
             <title>1.06 The Old Forest</title>
             <artist>J.R.R. Tolkien</artist>
             <albumtitle>LotR Part I: The Fellowship of the Ring</albumtitle>
             <index>12</index>
             <genre>Books &amp; Spoken</genre>
-        <duration>2431.708667</duration><rating>2</rating></song>
+        <duration>2431.708667</duration><rating>3</rating></song>
         <song href="LotR Part I The Fellowship of the Ring\01-- 107 In the House of Tom Bombadil.mp3">
             <title>1.07 In the House of Tom Bombadil</title>
             <artist>J.R.R. Tolkien</artist>
@@ -108,7 +108,7 @@
             <albumtitle>LotR Part I: The Fellowship of the Ring</albumtitle>
             <index>14</index>
             <genre>Books &amp; Spoken</genre>
-        <duration>2537.089667</duration></song>
+        <duration>2537.089667</duration><rating>3</rating></song>
         <song href="LotR Part I The Fellowship of the Ring\01-- 109 At the Sign of The Prancing Pony.mp3">
             <title>1.09 At the Sign of The Prancing Pony</title>
             <artist>J.R.R. Tolkien</artist>
@@ -353,7 +353,7 @@
             <albumtitle>LotR Part II: The Two Towers</albumtitle>
             <index>20</index>
             <genre>Books &amp; Spoken</genre>
-        <duration>2769.999667</duration><rating>2</rating></song>
+        <duration>2769.999667</duration></song>
         <song href="LotR Part III The Return of the King\01-- 501 Minas Tirith.mp3">
             <title>5.01 Minas Tirith</title>
             <artist>J.R.R. Tolkien</artist>
