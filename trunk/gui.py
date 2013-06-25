@@ -65,10 +65,10 @@ class XMLMenu(Menu):
 		self.funcs={}
 		for method in root.find("python").findall("method"):
 			name=method.get("name")
-			fname=xlistr.HOME+"/temp/"+name
+			fname=(xlistr.HOME+"%stemp%s"+name) % (os.sep,os.sep)
 			write_file(fname+".py",method.text)
 			#print method.text
-			_mod=__import__("temp."+name,globals(),locals(),['master','execute'], -1)
+			_mod=xlistr.import_by_fname(fname)
 			_mod.master=frame
 			self.funcs[name]=_mod.execute
 		self.submenus={"root":(self,self)}
@@ -539,7 +539,11 @@ class Editor(Frame):
 	def get_code(self):
 		return ""
 	def save(self):
-		write_file(self.filt.get_href(),self.get_code())
+		code=self.get_code()
+		write_file(self.filt.get_href(),code)
+		if self.filt.istemp():
+			self.filt.elem.text=code
+			self.filt.auto_save()
 	def cut(self):
 		pass
 	def copy(self):

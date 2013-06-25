@@ -105,6 +105,13 @@ def new_filter(filename,enabled=True,gencode=True):
 def rel_to_abs(path,start):
 	start=os.path.abspath(start)
 	return os.path.join(os.path.split(start)[0],path)
+def randomname(dirname,ext='.py'):
+	import random
+	name=dirname+os.sep+'temp_'+str(random.randint(0,10**12))+ext
+	if os.path.exists(name):
+		return randomname(dirname)
+	else:
+		return name
 #Classes
 class ElemWrapper(object):
 	def __init__(self,elem):
@@ -415,26 +422,35 @@ class Filter(ElemWrapper):
 	def __init__(self,elem,parents=[]):
 		self.parents=parents
 		self.elem=elem
+		self.temp_href=None
+		try:
+			href=self.elem.attrib[HREF]
+		except(KeyError):
+			href=randomname(xlistr.HOME+os.sep+'temp')
+			write_file(href,self.elem.text)
+			self.temp_href=href
 		self.load_module()
+	def istemp(self):
+		return self.temp_href!=None
 	def load_module(self):
-		import os
-		href=os.path.relpath(self.get_href(),xlistr.HOME).replace(".py","").replace(os.sep,".")
+		href=os.path.relpath(self.get_href(),xlistr.HOME)
 		#print href
-		self.module=__import__(href, globals(), locals(), ['test'], -1)
+		self.module=xlistr.import_by_fname(href)
 		self.test=self.module.test
 	def is_enabled(self):
 		txt=self.elem.attrib[ENABLED].lower()
 		return txt=="true"
 	def set_enabled(self,val):
 		self.elem.set(ENABLED,str(val))
-		for parent in self.parents:
-			parent.auto_save()
+		self.auto_save()
 	def get_href(self):
-		return self.elem.attrib[HREF]
+		try:
+			return self.elem.attrib[HREF]
+		except(KeyError):
+			return self.temp_href
 	def set_href(self,val):
 		self.elem.set(HREF,str(val))
-		for parent in self.parents:
-			parent.auto_save()
+		self.auto_save()
 	def get_genres(self):
 		res=[]
 		for p in self.parents:
@@ -443,6 +459,9 @@ class Filter(ElemWrapper):
 				if g not in res:
 					res.append(g)
 		return res
+	def auto_save(self):
+		for parent in self.parents:
+			parent.auto_save()
 #------------------------------------------------------
 #Testing
 def test():

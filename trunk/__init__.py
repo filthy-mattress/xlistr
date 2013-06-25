@@ -38,7 +38,14 @@ except(IOError):
 class XlistrException(Exception):
     pass
 def add_song(filename,title=None):
-	all_songs.add_song(new_song(filename,title=title))
+    all_songs.add_song(new_song(filename,title=title))
+def import_by_fname(filename):
+    path=os.path.abspath(filename)
+    head,tail=os.path.split(path)
+    sys.path.append(head)
+    _mod=__import__(tail.replace('.py',''))
+    sys.path.remove(head)
+    return _mod
 def installAVbin():
     gui.messagebox("AVbin is required to use this app.\nIt will now be installed.")
     url=None
@@ -69,10 +76,10 @@ def installAVbin():
 def main():
     #gui.thread_create(gui.FilterEditor)
     #import xlistr.test.playertester as test
-    #test.main(gui.FilterEditor)
+    #test.main()
     #gui.create()
-    #delTemps()
     gui.create(gui.FilterEditor)
+    delTemps()
 def delTemps():#Delete temp files
     path=os.path.join(HOME,"temp")
     for f in os.listdir(path):
