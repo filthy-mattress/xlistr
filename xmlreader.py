@@ -32,19 +32,15 @@ RATING    ="rating"
 GENRE     ="genre"
 ENABLED   ="enabled"
 ALBUMTITLE="albumtitle"
-'''
-nothing=lambda val:val
 common_tags=[TITLE,YEAR,GENRE]
 playlist_tags=[ALBUMS,SONGS,META]
 playlist_meta_tags=[CREATOR,FILTER,POSITION,TIME,COUNTER,SHUFFLE,LOOP,VOLUME]
-album_tags=[ART,ARTIST,YEAR,SONGCOUNT,HREF,GENRE]
+album_tags=[ARTIST,YEAR,SONGCOUNT,GENRE]
 song_tags=[ALBUMTITLE,ARTIST,INDEX,HREF,DURATION,RATING,GENRE]
 filter_tags=[CREATOR,HREF,ENABLED]
-attribset=lambda elem,attr,val:elem.find(attr).set(val)
-spec_setters={HREF:attribset,ART:None,ENABLED:attribset,ALBUMS:None,SONGS:None}
-spec_getters={META:lambda elem,attr:elem.find(attr)}
-casters={INDEX:int,TIME:float,DURATION:float,SONGCOUNT:int,POSITION:int,COUNTER:int,VOLUME:float,YEAR:int,SONGCOUNT:int}
-'''
+int_tags=[POSITION,COUNTER,YEAR,SONGCOUNT,INDEX,RATING]
+float_tags=[TIME,VOLUME,DURATION]
+bool_tags=[SHUFFLE,LOOP,ENABLED]
 #Functions
 def get_elem_text(elem,attr,default=None):
 	sub=elem.find(attr)
@@ -114,11 +110,49 @@ def randomname(dirname,ext='.py'):
 		return name
 #Classes
 class ElemWrapper(object):
-	def __init__(self,elem):
+	def __init__(self,elem,tags=[]):
 		self.elem=elem
+		self.tags=tags
 	def get_text(self,attr):
-		return self.elem.find(attr).text
-class Playlist(ElemWrapper):
+		txt= self.elem.find(attr).text
+		if attr in int_tags:
+			return int(txt)
+		elif attr in float_tags:
+			return float(txt)
+		elif attr in bool_tags:
+			return txt.lower()=='true'
+		return txt
+	def set_text(self,attr,text):
+		self.elem.find(attr).text=str(text)
+	def __getattr__(self,name):
+		try:
+			return object.__getattr__(self,name)
+		except(AttributeError):
+			pass
+		error=AttributeError('This element has no subelement tagged \'%s\'' % name)
+		if name.startswith('get_'):
+			tag=name.split('_')[1]
+			if tag in self.tags:
+				return lambda :self.get_text(tag)
+			else:
+				raise error
+		elif name.startswith('set_'):
+			tag=name.split('_')[1]
+			if tag in self.tags:
+				return lambda val:self.set_text(tag,val)
+			else:
+				raise error
+		else:
+			try:
+				return self.get_text(name)
+			except(AttributeError):
+				raise error
+	def __setattr__(self,name,val):
+		try:
+			self.set_text(name,val)
+		except(AttributeError):
+			object.__setattr__(self,name,val)
+class Playlist:
 	def __init__(self,filename,title=None,creator=None):
 		self.filename=filename
 		self.tree=ET.parse(filename)
@@ -301,6 +335,7 @@ class Playlist(ElemWrapper):
 		return filter(self.test_song,self.get_songs())
 class Album(ElemWrapper):
 	def __init__(self,elem,parents=[],title=None,artist=None):
+		ElemWrapper.__init__(self,elem,album_tags)
 		self.elem=elem
 		self.parents=parents
 		if title!=None:
