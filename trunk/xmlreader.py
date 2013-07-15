@@ -36,8 +36,8 @@ common_tags=[TITLE,YEAR,GENRE]
 playlist_tags=[ALBUMS,SONGS,META]
 playlist_meta_tags=[CREATOR,FILTER,POSITION,TIME,COUNTER,SHUFFLE,LOOP,VOLUME]
 album_tags=[ARTIST,YEAR,SONGCOUNT,GENRE]
-song_tags=[ALBUMTITLE,ARTIST,INDEX,HREF,DURATION,RATING,GENRE]
-filter_tags=[CREATOR,HREF,ENABLED]
+song_tags=[ALBUMTITLE,ARTIST,INDEX,DURATION,RATING,GENRE]
+filter_tags=[CREATOR]
 int_tags=[POSITION,COUNTER,YEAR,SONGCOUNT,INDEX,RATING]
 float_tags=[TIME,VOLUME,DURATION]
 bool_tags=[SHUFFLE,LOOP,ENABLED]
@@ -113,8 +113,11 @@ class ElemWrapper(object):
 	def __init__(self,elem,tags=[]):
 		self.elem=elem
 		self.tags=tags
-	def get_text(self,attr):
-		txt= self.elem.find(attr).text
+	def get_text(self,attr,default=None):
+		try:
+			txt= self.elem.find(attr).text
+		except(AttributeError):
+			return default
 		if attr in int_tags:
 			return int(txt)
 		elif attr in float_tags:
@@ -335,8 +338,7 @@ class Playlist:
 		return filter(self.test_song,self.get_songs())
 class Album(ElemWrapper):
 	def __init__(self,elem,parents=[],title=None,artist=None):
-		ElemWrapper.__init__(self,elem,album_tags)
-		self.elem=elem
+		ElemWrapper.__init__(self,elem,album_tags+common_tags)
 		self.parents=parents
 		if title!=None:
 			self.set_title(title)
@@ -389,7 +391,7 @@ class Album(ElemWrapper):
 		return res
 class Song(ElemWrapper):
 	def __init__(self,elem,parents=[],title=None,artist=None):
-		self.elem=elem
+		ElemWrapper.__init__(self,elem,song_tags+common_tags)
 		self.parents=parents
 		if title:
 			self.set_title(title)
@@ -455,6 +457,7 @@ class Song(ElemWrapper):
 		self.set_text(GENRE,val)
 class Filter(ElemWrapper):
 	def __init__(self,elem,parents=[]):
+		ElemWrapper.__init__(self,elem,filter_tags)
 		self.parents=parents
 		self.elem=elem
 		self.temp_href=None
