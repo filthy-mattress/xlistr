@@ -22,31 +22,8 @@ pathset.add(PARENT)
 sys.path=list(pathset)
 os.curdir=HOME
 #print sys.path
-from xmlreader import *
-import gui,tkFileDialog
-#print gui.format(129.787667)
-VERSION="ALPHA 0.0.1"
-FNAME_ALL="playlists/all.xml"
-all_songs=None
-try:
-    all_songs=Playlist(FNAME_ALL,title="All")
-except(IOError):
-    try:
-        all_songs=new_playlist("All",FNAME_ALL)
-    except(IOError):
-        pass
-class XlistrException(Exception):
-    pass
-def add_song(filename,title=None):
-    all_songs.add_song(new_song(filename,title=title))
-def import_by_fname(filename):
-    path=os.path.abspath(filename)
-    head,tail=os.path.split(path)
-    sys.path.append(head)
-    _mod=__import__(tail.replace('.py',''))
-    sys.path.remove(head)
-    return _mod
 def installAVbin():
+    import gui
     gui.messagebox("AVbin is required to use this app.\nIt will now be installed.")
     url=None
     is_64bits = sys.maxsize > 2**32
@@ -72,6 +49,30 @@ def installAVbin():
         raise XlistrException("AVbin could not be installed: Unsopported operating system")
     gui.messagebox("The application will now exit.")
     sys.exit()
+from xmlreader import *
+import gui,tkFileDialog
+#print gui.format(129.787667)
+VERSION="ALPHA 0.0.1"
+FNAME_ALL="playlists/all.xml"
+all_songs=None
+try:
+    all_songs=Playlist(FNAME_ALL,title="All")
+except(IOError):
+    try:
+        all_songs=new_playlist("All",FNAME_ALL)
+    except(IOError):
+        pass
+class XlistrException(Exception):
+    pass
+def add_song(filename,title=None):
+    all_songs.add_song(new_song(filename,title=title))
+def import_by_fname(filename):
+    path=os.path.abspath(filename)
+    head,tail=os.path.split(path)
+    sys.path.append(head)
+    _mod=__import__(tail.replace('.py',''))
+    sys.path.remove(head)
+    return _mod
 #Main section
 def main():
     #gui.thread_create(gui.FilterEditor)
